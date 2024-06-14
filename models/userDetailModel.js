@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 const userDetailSchema = new mongoose.Schema({
-    role: {type: String},
+    role: {type: Enumerator},
     name: {
         firstName: {type: String},
         middleName: {type: String},
@@ -12,9 +12,10 @@ const userDetailSchema = new mongoose.Schema({
     state: {type: String},
     city: {type: String},
     phoneNumber: {type: Number},
-    dob: {type: Date},
+    dob: {type: String},
     bloodGroup: {type: String},
-    gender: {type: String}
+    gender: {type: String},
+    userId: {type: mongoose.SchemaTypes.ObjectId}
 });
 
 const userDetailModel = mongoose.model("userDetails", userDetailSchema);

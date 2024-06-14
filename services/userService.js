@@ -17,6 +17,7 @@ export async function registerUser(userData) {
 
 export async function loginUser(userData) {
   try {
+    let data;
     const existingUser = await findUserByEmail(userData.userName);
     if (existingUser) {
       const storedHashedPassword = existingUser.password;
@@ -26,12 +27,13 @@ export async function loginUser(userData) {
         } else {
           console.log(result);
           if (result) {
-            return userData;
+            data = userData;
           } else {
             throw new Error("Incorrect Password");
           }
         }
-      });
+      }) 
+      return {message: "logged in",user: userData.userName};
     } else {
       throw new Error("User not found");
     }
