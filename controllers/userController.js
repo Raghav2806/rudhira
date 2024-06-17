@@ -1,4 +1,4 @@
-import { registerUser, loginUser, sendEmail } from "../services/userService.js";
+import { registerUser, loginUser, forgotPasswordMail } from "../services/userService.js";
 import { ApiError } from "../errors/ApiError.js";
 
 export async function register (req,res,next) {
@@ -19,9 +19,9 @@ export async function login (req,res,next) {
     }
 };
 
-export async function mail (req,res,next) {
+export async function forgotPassword (req,res,next) {
     try {
-        const user = await sendEmail(req.body);
+        const user = await forgotPasswordMail(req.body);
         res.status(201).json(user);
     } catch (err) {
         next(ApiError.badRequest(err.message));
