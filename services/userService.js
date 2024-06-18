@@ -1,4 +1,4 @@
-import { findUserByEmail, createUser } from "../repositories/userRepository.js";
+import { findUserByEmail, createUser, updatingPassword } from "../repositories/userRepository.js";
 import bcrypt from "bcrypt";
 import nodemailer from "nodemailer";
 import * as dotenv from "dotenv";
@@ -74,7 +74,7 @@ export async function forgotPasswordMail(userData) {
         to: userData.userName,
         subject: "Reset your password",
         text: "Reset your password here",
-        html: "<a href='https://www.youtube.com/'>Reset your password</a>",
+        html: "<a href='http://localhost:3000/api/users/updatePassword'>Reset your password</a>",
       };
       await sendEmail(transporter, forgotPasswordOptions);
       return { user: userData, msg: "Mail Sent" };
@@ -83,5 +83,14 @@ export async function forgotPasswordMail(userData) {
     }
   } catch (err) {
     throw new Error("Cannot send mail");
+  }
+}
+
+export async function newPassword(userData) {
+  try{
+    await updatingPassword(userData);
+    return { user: userData, msg: "Password updated" };
+  } catch (err) {
+    throw new Error("Unable to update the password");
   }
 }

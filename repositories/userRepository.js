@@ -16,3 +16,13 @@ export async function createUser (userData) {
         }
       });
 };
+
+export async function updatingPassword (userData) {
+  bcrypt.hash(userData.password, saltRounds, async (err, hash) => {
+    if (err) {
+      throw new Error("Unable to hash the password");
+    } else {
+      return await userModel.findOneAndUpdate({userName:userData.userName},{password:hash});
+    }
+  });
+};
