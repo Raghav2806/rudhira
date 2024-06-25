@@ -1,4 +1,4 @@
-import { registerUser, loginUser, forgotPasswordMail, newPassword } from "../services/userService.js";
+import { registerUser, loginUser, forgotPasswordMail, newPassword, newRequest, newProfile } from "../services/userService.js";
 import { ApiError } from "../errors/ApiError.js";
 
 export async function register (req,res,next) {
@@ -31,6 +31,24 @@ export async function forgotPassword (req,res,next) {
 export async function updatePassword (req,res,next) {
     try {
         const user = await newPassword(req.body);
+        res.status(201).json(user);
+    } catch (err) {
+        next(ApiError.badRequest(err.message));
+    }
+}
+
+export async function makeProfile (req,res,next) {
+    try {
+        const user = await newProfile(req.body);
+        res.status(201).json(user);
+    } catch (err) {
+        next(ApiError.badRequest(err.message));
+    }
+}
+
+export async function makeRequest (req,res,next) {
+    try {
+        const user = await newRequest(req.body);
         res.status(201).json(user);
     } catch (err) {
         next(ApiError.badRequest(err.message));

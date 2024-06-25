@@ -1,4 +1,4 @@
-import { findUserByEmail, createUser, updatingPassword } from "../repositories/userRepository.js";
+import { findUserByEmail, createUser, updatingPassword, createRequest, createProfile } from "../repositories/userRepository.js";
 import bcrypt from "bcrypt";
 import nodemailer from "nodemailer";
 import * as dotenv from "dotenv";
@@ -33,19 +33,12 @@ export async function loginUser(userData) {
     const existingUser = await findUserByEmail(userData.userName);
     if (existingUser) {
       const storedHashedPassword = existingUser.password;
-      bcrypt.compare(userData.password, storedHashedPassword, (err, result) => {
-        if (err) {
-          throw new Error("Unable to compare passwords");
-        } else {
-          console.log(result);
-          if (result) {
-            data = userData;
-          } else {
-            throw new Error("Incorrect Password");
-          }
-        }
-      });
-      return { message: "logged in", user: userData.userName };
+      const isPasswordCorrect = await bcrypt.compare(userData.password, storedHashedPassword);
+      if (isPasswordCorrect) {
+        return { message: "logged in", user: userData.userName };
+      } else {
+        return { message: "incorrect password." };
+      }
     } else {
       throw new Error("User not found");
     }
@@ -92,5 +85,23 @@ export async function newPassword(userData) {
     return { user: userData, msg: "Password updated" };
   } catch (err) {
     throw new Error("Unable to update the password");
+  }
+}
+
+export async function newProfile(userData) {
+  try {
+    await createProfile(userData);
+    return {message: "Profile Created"}
+  } catch (err) {
+    throw new Error("Unable to create profile");
+  }
+}
+
+export async function newRequest(requestData) {
+  try {
+    await createRequest(requestData);
+    return {message: "Request Created"}
+  } catch (err) {
+    throw new Error("Unable to create request");
   }
 }

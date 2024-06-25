@@ -1,7 +1,10 @@
 import mongoose from "mongoose";
 
 const userDetailSchema = new mongoose.Schema({
-    role: {type: Enumerator},
+    role: {
+        type: String,
+        enum: ['user','bloodbank']
+    },
     name: {
         firstName: {type: String},
         middleName: {type: String},
