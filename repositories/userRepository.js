@@ -2,6 +2,7 @@ import userModel from "../models/userModel.js";
 import requestModel from "../models/requestModel.js";
 import bcrypt from "bcrypt";
 import userDetailModel from "../models/userDetailModel.js";
+import bloodGroupCompatibility from "../const.js";
 
 const saltRounds = 10;
 
@@ -80,4 +81,15 @@ export async function createRequest (requestData) {
   } catch (err) {
     throw new Error("Unable to create profile");
 }  
+}
+
+export async function getCompatibleBloodGroups(userBloodGroup) {
+  if (!bloodGroupCompatibility[userBloodGroup]) {
+    throw new Error('Invalid blood group');
+  }
+  return bloodGroupCompatibility[userBloodGroup];
+}
+
+export async function findRequestsByBloodGroup(userBloodGroup) {
+  return await requestModel.findOne({bloodGroup: userBloodGroup, isDonationCamp: false});
 }

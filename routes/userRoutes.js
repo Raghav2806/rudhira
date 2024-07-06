@@ -1,5 +1,5 @@
 import express from "express";
-import { register, login, forgotPassword, updatePassword, makeRequest, makeProfile } from "../controllers/userController.js";
+import { register, login, forgotPassword, updatePassword, makeRequest, makeProfile, getRequests } from "../controllers/userController.js";
 
 export const router = express.Router();
 
@@ -14,3 +14,5 @@ router.post('/updatePassword', updatePassword);
 router.post('/makeProfile', makeProfile);
 
 router.post('/makeRequest', makeRequest);
+
+router.get('/getRequests', getRequests);

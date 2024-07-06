@@ -1,7 +1,8 @@
-import { findUserByEmail, createUser, updatingPassword, createRequest, createProfile } from "../repositories/userRepository.js";
+import { findUserByEmail, createUser, updatingPassword, createRequest, createProfile, getCompatibleBloodGroups, findRequestsByBloodGroup } from "../repositories/userRepository.js";
 import bcrypt from "bcrypt";
 import nodemailer from "nodemailer";
 import * as dotenv from "dotenv";
+import { request } from "express";
 dotenv.config();
 
 const transporter = nodemailer.createTransport({
@@ -101,6 +102,21 @@ export async function newRequest(requestData) {
   try {
     await createRequest(requestData);
     return {message: "Request Created"}
+  } catch (err) {
+    throw new Error("Unable to create request");
+  }
+}
+
+export async function getCompatibleRequests (userData) {
+  try {
+    const list = await getCompatibleBloodGroups(userData.bloodGroup);
+    const requests =[];
+    for (let i=0; i<list.length+1; i++) {
+      const request = await findRequestsByBloodGroup(list[i]);
+      requests.push(request);
+    }
+    console.log(requests);
+    return requests;
   } catch (err) {
     throw new Error("Unable to create request");
   }
